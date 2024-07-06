@@ -2,6 +2,7 @@ import { React, useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, RefreshControl, TextInput, SafeAreaView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const Home = () => {
@@ -19,22 +20,43 @@ const Home = () => {
         }, 3000)
     };
 
-    const addTask = () => {
+    const addTask = async () => {
         if (newTask.trim() !== "") {
-            setTasks([...tasks, { id: tasks.length + 1, text: newTask }]);
-            setNewTask("");
+          const newTasks = [...tasks, { id: tasks.length + 1, text: newTask }];
+          setTasks(newTasks);
+          setNewTask("");
+          await AsyncStorage.setItem('tasks', JSON.stringify(newTasks));
         }
-    };
+      };
 
-    const deleteTask = (id) => {
-        setTasks(tasks.filter(task => task.id !== id));
-    };
+      useEffect(() => {
+        const getData = async () => {
+          try {
+            const storedTasks = await AsyncStorage.getItem('tasks');
+            if (storedTasks) {
+              const parsedTasks = JSON.parse(storedTasks);
+              if (Array.isArray(parsedTasks)) {
+                setTasks(parsedTasks);
+              }
+            }
+          } catch (e) {
+            console.error(e);
+          }
+        };
+        getData();
+      }, []);
+
+      const deleteTask = async (id) => {
+        const newTasks = tasks.filter(task => (task.id) !== id);
+        setTasks(newTasks);
+        await AsyncStorage.setItem('tasks', JSON.stringify(newTasks));
+      };
 
     return (
         <View style={styles.container}>
             <ScrollView refreshControl={<RefreshControl refreshing={refresh} onRefresh={() => pullMe()} />}>
 
-                {tasks.map((task) => (
+                {tasks && tasks.map((task) => (
                     <View key={task.id} style={styles.taskBox}>
                         <View>
                             <Text style={styles.taskText}>{task.text}</Text>
