@@ -2,6 +2,9 @@ import { React, useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, TextInput } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import SignIn from "./SignIn";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
+const auth = getAuth();
 
 const SignUp = ({navigation}) => {
     const [email, setEmail] = useState('');
@@ -10,12 +13,28 @@ const SignUp = ({navigation}) => {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirnPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
+    const handleSignUp = async () => {
+        try {
+          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+          console.log(userCredential);
+          navigation.navigate('SignIn');
+          alert("Account created successfully.        Let's log you in!");
+
+          setEmail('');
+          setPassword('');
+          setConfirmPassword('');
+      
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
     return(
         <View style={styles.container}>
             <TouchableOpacity onPress={()=> navigation.navigate(SignIn)}>
             <Ionicons name="arrow-back" size={25} color="grey" style={{marginTop:35, marginLeft:"5%"}}/>
             </TouchableOpacity>
-            <Text style={styles.heading}>Let's sign-up</Text>
+            <Text style={styles.heading}>Create your account</Text>
             {/* Email */}
             <View>
                 <Text style={{ color: "black", marginLeft: 25, fontSize:16 }}>E-mail</Text>
@@ -46,7 +65,7 @@ const SignUp = ({navigation}) => {
             </View>
             
             {/* Button */}
-            <TouchableOpacity style={styles.loginbutton} onPress={()=> navigation.navigate(SignIn)}>
+            <TouchableOpacity style={styles.loginbutton} onPress={handleSignUp}>
                 <Text style={{color:"white", textAlign: "center", fontSize: 20, fontWeight:"bold" }}>Sign-up</Text>
             </TouchableOpacity>
 
@@ -62,9 +81,11 @@ const styles = StyleSheet.create({
     container:{
         flex: 1,
         backgroundColor:"#fff",
-    },heading:{
+    },
+    heading:{
         marginBottom: 70,
         fontSize:30,
+        fontWeight:"bold",
         marginTop:80,
         textAlign:"center",
     },

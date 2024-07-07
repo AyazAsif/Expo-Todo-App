@@ -2,11 +2,43 @@ import { React, useState } from "react";
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import DrawerScreen from "./NavigationScreens/DrawerScreen";
+import "firebase/compat/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { initializeApp } from "firebase/app";
 
 const SignIn = ({navigation}) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordVisible, setPasswordVisible] = useState(false);
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBSAqliNHOB20XrkKFzxT5fgwSA7rytBNg",
+        authDomain: "todo-app-7427d.firebaseapp.com",
+        projectId: "todo-app-7427d",
+        storageBucket: "todo-app-7427d.appspot.com",
+        messagingSenderId: "436787861577",
+        appId: "1:436787861577:web:8d332e279e5ea30044c798",
+        measurementId: "G-R91HDM97FJ"
+      };
+
+    const app = initializeApp(firebaseConfig);
+
+    const handleSignIn = async () => {
+        try {
+          const auth = getAuth(app);
+          await signInWithEmailAndPassword(auth, email, password);
+          navigation.navigate(DrawerScreen);
+          console.log("User log-in.");
+          alert("Welcome");
+          // Sign-in successful, navigate to DrawerScreen
+          setEmail('');
+          setPassword('');
+      
+        } catch (error) {
+          console.error("Error Login", error);
+        }
+      };
+
     return(
         <View style={styles.container}>
             <TouchableOpacity >
@@ -33,10 +65,10 @@ const SignIn = ({navigation}) => {
             </View>
             {/* Forgot Password */}
             <View style={{marginLeft:225}}>
-               <TouchableOpacity onPress={()=>navigation.navigate("ResetPassword")}><Text style={{color:"black"}}>Forget Password?</Text></TouchableOpacity>
+               <TouchableOpacity onPress={()=>navigation.navigate("ResetPassword")}><Text style={{color:"blue"}}>Forget Password?</Text></TouchableOpacity>
             </View>
             {/* Button */}
-            <TouchableOpacity style={styles.loginbutton} onPress={()=> navigation.navigate(DrawerScreen)}>
+            <TouchableOpacity style={styles.loginbutton} onPress={handleSignIn}>
                 <Text style={{color:"white", textAlign: "center", fontSize: 20, fontWeight:"bold" }}>Sign-in</Text>
             </TouchableOpacity>
 
@@ -56,8 +88,10 @@ const styles = StyleSheet.create({
     heading:{
         marginBottom: 70,
         fontSize:30,
+        fontWeight:"bold",
         marginTop:80,
         textAlign:"center",
+        // color:"#fff"
     },
     input: {
         color: 'black',

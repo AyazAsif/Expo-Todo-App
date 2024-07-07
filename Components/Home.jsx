@@ -8,9 +8,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const Home = () => {
     const [refresh, setRefresh] = useState(false);
 
-    const [tasks, setTasks] = useState([
-        
-    ]);
+    const [tasks, setTasks] = useState([]);
+    
     const [newTask, setNewTask] = useState("");
 
     const pullMe = () => {
