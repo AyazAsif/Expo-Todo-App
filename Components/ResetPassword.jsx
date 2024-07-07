@@ -1,9 +1,23 @@
 import { React, useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert, Button } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 
 const ResetPassword = ({navigation}) => {
-    const [email, setEmail] = useState('')
+    const [email, setEmail] = useState('');
+
+    const auth = getAuth();
+
+    const handleForgotPassword = async () => {
+        try {
+          await sendPasswordResetEmail(auth, email);
+          alert("Password reset email sent!");
+          setEmail('');
+        } catch (error) {
+          console.error(error);
+        }
+      };
+    
     return(
         <View style={styles.container}>
             <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
@@ -20,7 +34,7 @@ const ResetPassword = ({navigation}) => {
                 </View>
             </View>
             {/* Button */}
-            <TouchableOpacity style={styles.loginbutton}>
+            <TouchableOpacity style={styles.loginbutton} onPress={handleForgotPassword}>
                 <Text style={{color:"white", textAlign: "center", fontSize: 20, fontWeight:"bold" }}>Reset</Text>
             </TouchableOpacity>
 
