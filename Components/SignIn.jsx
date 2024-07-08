@@ -1,27 +1,16 @@
 import { React, useState } from "react";
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import DrawerScreen from "./NavigationScreens/DrawerScreen";
-import "firebase/compat/auth";
+import { DrawerScreen } from "./NavigationScreens/DrawerScreen";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { initializeApp } from "firebase/app";
+import { app } from "../Config";
+
 
 const SignIn = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordVisible, setPasswordVisible] = useState(false);
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyBSAqliNHOB20XrkKFzxT5fgwSA7rytBNg",
-        authDomain: "todo-app-7427d.firebaseapp.com",
-        projectId: "todo-app-7427d",
-        storageBucket: "todo-app-7427d.appspot.com",
-        messagingSenderId: "436787861577",
-        appId: "1:436787861577:web:8d332e279e5ea30044c798",
-        measurementId: "G-R91HDM97FJ"
-    };
-
-    const app = initializeApp(firebaseConfig);
 
     const handleSignIn = async () => {
         try {
@@ -29,8 +18,8 @@ const SignIn = ({ navigation }) => {
             await signInWithEmailAndPassword(auth, email, password);
             navigation.navigate(DrawerScreen);
             console.log("User log-in.");
-            alert("Welcome");
-            // Sign-in successful, navigate to DrawerScreen
+            alert("           Welcome   ");
+
             setEmail('');
             setPassword('');
 

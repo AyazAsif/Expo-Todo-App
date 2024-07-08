@@ -5,6 +5,7 @@ import Splash from './Components/Splash';
 import { useEffect, useState } from 'react';
 import StackNavigation from './Components/NavigationScreens/StackNavigation';
 
+
 export default function App() {
   const[splashShow, setSplashShow]=useState(true)
 
