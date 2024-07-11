@@ -16,7 +16,7 @@ const SignIn = ({ navigation }) => {
         try {
             const auth = getAuth(app);
             await signInWithEmailAndPassword(auth, email, password);
-            navigation.navigate(DrawerScreen);
+            navigation.navigate("DrawerScreen");
             console.log("User log-in.");
             alert("           Welcome   ");
 
